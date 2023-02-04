@@ -14,8 +14,9 @@ This lab's purpose is to understand how Active Directory and Windows networking 
 - Install and configure Windows Server 2019
 - Create a Windows 10 ISO with Microsoft's media creation tool
 - Install and configure Windows 10
-- Install and configure Microsoft's Active Directory Domain Services (AD DS) to create a basic Windows network
+- Install and configure Microsoft's Active Directory Domain Services (AD DS)
 - Create 1,000+ users with Windows PowerShell
+- Enterprise level user management
 
 ### Tools and Requirements:
 1. Oracle VirtualBox
@@ -30,90 +31,76 @@ This lab's purpose is to understand how Active Directory and Windows networking 
 
 ## Step 1: Download and Install [Oracle VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - Select the appropriate download based on the current host OS
-- Locate the VirtualBox installer file with File Explorer
 - Install VirtualBox with the Wizard defaults or desired preferences
-- Download the VM VirtualBox Extension Pack
-- Click on downloaded Extension Pack and hit **Install** when prompted
+- Download and install the VM VirtualBox Extension Pack
 > NOTE: This setup will use a Windows 11 host OS.
 
 ![](images/virtualbox_download.png)
 
 ## Step 2: Download [Windows Server 2019 ISO](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019)
-- Select the appropriate language (English)
-- Under ISO downloads select 64-bit edition
-- Save to desired location
+- English (United States)
+- ISO File 
+- 64-bit edition
 
 ![](images/win_server_download.png)
 
 ## Step 3: Download Microsoft's [Media Creation Tool](https://www.microsoft.com/en-us/software-download/windows10) and Windows 10 ISO
-> NOTE: In order to download the Windows 10 ISO the assistance of the media creation tool is required.
+> NOTE: In order to download the Windows 10 ISO the media creation tool is required.
 
 ### Create Windows 10 Installation Media 
 - Select **Download Now**
-- Locate the executable installer and install the Media Creation Tool
-- Follow the Wizard intall prompts
-- Once it installs follow the the prompts to download the Windows 10 ISO file.
+- Install with defualt options
+- Follow the the prompts to download the Windows 10 ISO file.
 
 ![](images/create_win_inst.png)
 
-### What do you want to do?
-- Select **Create installation media (USB flas drive, DVD, or ISO file) for another PC**
-- Click **Next**
+#### What do you want to do?
+- **Create installation media (USB flas drive, DVD, or ISO file) for another PC**
 
 ![](images/create_media.png)
 
-### Select language, architecture and edition
+#### Select language, architecture and edition
 - **Language:** English (United States)
 - **Edition:** Windows 10
 - **Architecture:** 64-bit (x64)
-- Click **Next**
 > NOTE: Keep recommended options, otherwise uncheck button to edit selections.
 
 ![](images/create_media_2.png)
 
-### Choose which media to use
-- Select **ISO file**
-- Click **Next**
-- Select the destination folder to save the Windows 10 ISO file
-- Hit **Save** and wait for download to finish
+#### Choose which media to use
+- **ISO file**
 - Click **Finish** to exit the program
 
 ![](images/create_media_3.png)
 
 ## Step 4: Create and Configure Domain Controller Virtual Machine
-### Virtual Machine Name and Operating System
-- Open VirtualBox and select **Machine** to bring a drop down menu
+#### Virtual Machine Name and Operating System
+- Open VirtualBox and select **Machine** to bring a drop down menu and select **New**
 - **Name:** Domain Controller
 - **Type:** Microsoft Windows
 - **Version:** Other Windows (64-bit)
-- Hit **Next**
 
 ![](images/new_vm.png)
 
-### Hardware
+#### Hardware
 - **Base Memory:** 2048 MB (2GB)
-- **Processors:** 2 CPUs
-- Click **Next**
-> NOTE: Options depend on host computers available resources.
-### Virtual Hard Disk
-- Leave default Create a Virtual Hard Disk Now 
-- **Disk Size:** Default - 20.00 GB
-- Select **Next**
-### Summary
-- Review and confirm selections are correct
-- Click **Finish** to complete VM creation
-### Settings
-- Once the VM has been created, select the VM and click **Settings**
-- Go to **General** > **Advanced** > **Shared Clipboard** > **Bidirectional**
-- Go to **General** > **Advanced** > **Drag'n'Drop** > **Bidirectional**
-- These options will enable copying and pasting, as well as dragging and dropping between host and VM
-- Go to **Network** > **Adapter 1** > **Attatched to:** NAT
-- Go to **Network** > **Adapter 2** > Check Enable Network Adapter Box > **Attatched to:** Internal Network
-- Click **Ok**
+- **Processors:** 2-4 CPUs
+
+#### Virtual Hard Disk
+- **Disk Size:** 50.00GB
+
+#### Settings
+- **General** > **Advanced** > **Shared Clipboard** > **Bidirectional**
+- **General** > **Advanced** > **Drag'n'Drop** > **Bidirectional**
+> NOTE: These options will enable copying and pasting, as well as dragging and dropping between host and VM
+- **Network** > **Adapter 1** > **Attatched to:** NAT
+- **Network** > **Adapter 2** > Check **Enable Network Adapter** Box > **Attatched to:** Internal Network
+
 
 ![](images/dc_properties.png)
 
 ## Step 5: Install Windows Server 2019 and Change PC Name
+### Install Windows Server 2019
 - Double click the **Domain Controller** VM
 - It will fail to boot because it is missing the OS
 - Select the DVD dropdown menu and find the Windows Server 2019 ISO file
@@ -121,38 +108,29 @@ This lab's purpose is to understand how Active Directory and Windows networking 
 
 ![](images/mount_iso.png)
 
-### Collecting information
-- Leave **Language** **Time** and **Keyboard** as defaults and click **Next**
-- Click **Install Now**
 - Select Windows Server 2019 Standard Evaluation (Desktop Experience)
-- Click **Next** 
-- Read and accept license terms, then click **Next**
 - Select **Custom: Insall Windows only (advanced) and click **Next**
-- Allow time to install Windows and wait until it boots up into Windows
-- Create a password for the Administrator account. Use `Password1` for lab ONLY and click **Finish**
-- When prompted to press **CTRL+ALT+DEL** go to the menu bar above the VM and select **Input** > **Keyboard** > **Insert CTRL+ALT+DEL**
+- Configure Administrator account:
+    - **Username** Administrator
+    - **Password** Password1
+- To press **CTRL+ALT+DEL** Select **Input** > **Keyboard** > **Insert CTRL+ALT+DEL**
 
 ![](images/unlock.png)
 
-- Login with the **Administrator** account and the password: **Password1**
-- Close out of notifications and pop ups
-- On the upper menu of the VM select **Devices** > **Insert Guest Additions CD Image**
+- Login and close out of notifications and pop ups
+- On VM menu select **Devices** > **Insert Guest Additions CD Image**
+- Open **File Explorer** > **This PC** > **CD Drive D: VirtualBox Guest Additions** > **VBoxWindowsAdditions-amd64**
+- Select **I want to manually reboot later** and click **Finish**
+### Change PC Name
+- Right-click **Windows start icon** > **System** > **Rename this PC**
+- Name it "DC" > **Restart later** 
+- Manually shutdown the VM and restart
 
 ![](images/guest_additions.png)
 
-- Open **File Explorer** > **This PC** > **CD Drive D: VirtualBox Guest Additions** > **VBoxWindowsAdditions-amd64**
-- Follow installer prompts with default options
-- Select **I want to manually reboot later** and click **Finish**
-- Right-click the **Windows icon** on the bottom left and select **System**
-- Press **Rename this PC** and name it "DC"
-- Select the **Restart later** button 
-- Manually shutdown the VM and restart
-
-
 ## Step 6: Configure Internal and External NICs
-- Select the network icon on the bottom right of the screen and click **Network**
-- Press **Change adapter options**
-- Right-click the **Unidentified Network** > **Status** and click **Details**
+- Select the network icon on the bottom right of the screen and click **Network** > **Change adapter options**
+- Right-click **Unidentified Network** > **Status** > **Details**
 - It will not have internet access because the adapter is looking for a DHCP server that has not been configured yet
 
 ![](images/no_dhcp.png)
@@ -164,40 +142,197 @@ This lab's purpose is to understand how Active Directory and Windows networking 
 ![](images/nic_names.png)
 
 - Right-click the internal network adapter and select **properties**
-- Select **Internet Protocol Version 4 (TCP/IPv4)
-- Select ** Use the follwoing IP address in order to enter it manually
+- **Internet Protocol Version 4 (TCP/IPv4)**
   - **IP:** 172.16.0.1
   - **Subnet Mask:** 255.255.255.0
   - **Default Gateway:** <Empty> 
   > NOTE: The Domain Controller will serve as the Default Gateway
 - Installing Active Directory automatically installs DNS therefore the server will use itself as the DNS server
-- For **Use the following DNS server addresses**
   - **Preferred DNS Server:** 127.0.0.1 (Loopback address)
-- Click **Ok** and **Ok** again
 
 ![](images/ip_configs.png)
 
 ## Step 7: Install Active Directory Domain Services (AD DS) and Create a Domain
-- If not already open, search for **Server Manager** within the bottom searchbar
-- Select **Add roles and features**
-- Continue to click **Next** until it prompts to select a server to install it to which should be the default and only selection available
-- Check only the **Active Directory Domain Services** box, click **Add features** and click **Next**
-- Continue to click **Next** with the default options and finally **Install** at the end
-- Hit **Close** once it has finished
-- Within the Server Manager Dashboard click the **Notifications Flag Icon** that can be found on the upper right corner
-- Click **Promote this server to a domain controller**
+### Install AD DS
+- **Server Manager** > **Add roles and features**
+- Under **Server Roles** check the **Active Directory Domain Services** box > **Add features**
+- Continue to click **Next** with the default options and **Install**
+- Within the Server Manager Dashboard click the **Notifications Flag Icon** > **Promote this server to a domain controller**
 
-### Deployment Configuration
-- **Select the deployment operation:** Add a new forest
-- Under **Specify the domain information for this operation** give the domain a name
-- **Root domain name:** "mydomain.com"
-- Press **Next**
-### Domain Controller Options
-- Under **type the Directory Services Restore Mode (DSRM) password** you would put the restoration password
+![](images/adds_inst_progress.png)
+
+### Create a Domain
+- Under **Deployment Configuration** > **Add a new forest**
+  - **Root domain name:** "mydomain.com"
+- Under **Domain Controller Options** > **type the Directory Services Restore Mode (DSRM) password** you would put the restoration password
   - **Password:** Password1
-- Continue to click **Next** with all the default fields until **Install**
-- Wait for it to restart and log back in
-- Click the Windows start icon and select **Windows Administrative Tools** > **Active Directory Users and Computers** 
+- Continue to click **Next** with all the default fields and **Install**
+
+### Create a Dedicated Admin User Account
+- **Start** > **Windows Administrative Tools** > **Active Directory Users and Computers** 
 - Right-click **mydomain.com** > **New** > **Organizational Unit**
+  - **Name:** "_ADMINS"
+> NOTE: This will not give it the admin permissions yet. That will be configured later
 
+![](images/organizational_unit.png)
 
+- Right-click the **_ADMINS** Organizational Unit > **New** > **User**
+- Fill out first and last name
+  - E.g. John Doe's administrator account: a-jdoe 
+  - **Password:** "Password1" 
+  - Uncheck **User must change password at next login** 
+  - Check **Password never expires**
+> NOTE: The "a-" is to signify that it is an administrator's account
+- Right-click new user > **Properties** > **Member of** > **Add** 
+- Enter "domain admins" into field and press **Check Names** to resolve itself
+- Press **Ok** > **Apply** > **Ok**
+- Sign out of the Domain Controller and login with new credentials
+
+![](images/add_to_admin.png)
+
+## Step 8: Install Remote Access Server (RAS) and Network Address Translation (NAT)
+### Install RAS
+> NOTE: This will allow the clients in the domain access to the internet through the Domain Controller.
+- In the Server Manager Dashboard select **Add roles and features** 
+- Under **Server Roles** check the **Remote access** box
+- Under **Role Services** check the **Routing** box and click **Add features**
+- Click **Next** with defaults and **Install** 
+### Install NAT
+- **Tools** > **Routing and Remote Access**
+- Right-click **DC Local** > **Configure and Enable Routing and Remote Access**
+- Select **Network Address Translaion (NAT)**
+- Select the "INTERNETexternal" NIC
+> NOTE: If the option is greyed out, cancel the operation and try again
+
+![](images/server_ras_nat.png)
+
+## Step 9: Set up a Dynamic Host Configuration Protocol (DHCP) Server
+> NOTE: This will allow Windows 10 clients to obtain an IP address and browse the internet 
+- In the **Server Manager** Dashboard select **Add roles and features**
+- Under **Server Roles** check the **DHCP Server** box > **Add features** 
+- Click **Next** with defaults and **Install**
+- Go to **Tools** > **DHCP**
+- Right-click **IPv4** > **New scope**
+- Name the scope with the IP address range (172.16.0.100-200)
+  - **Scope Name:** "172.16.0.100-200"
+  - **Start IP Address:** 172.16.0.100
+  - **End IP Address:** 172.16.0.200
+  - **Length:** 24 (/24 CIDR)
+  - **Subnet Mask** 255.255.255.0
+- Set the default gateway to the Domain Controller's IP address and click **Add**
+  - **Router (Default Gatweway):** "172.16.0.1"
+- Click **Next** with all other defaults and **Finish** 
+> NOTE: IPv4 DHCP might still be red and down so right-click **dc.mydomain.com** > **Authorize** and **Refresh** 
+
+![](images/dhcp.png)
+
+## Step 10: Use PowerShell Script to add 1,000+ Users
+### Enable Web Browsing on Domain Controller
+> NOTE: This will be done for the lab ONLY. It should never be replicated in an actual production environment for security reasons.
+- **Configure this local server** > Disable **IE Enhanced Security Configuration**
+- Select **OFF** for **Administrators** and **Users** 
+### Download the PowerShell Script
+- Open Internet Explorer to download the [PowerShell Script](https://github.com/joshmadakor1/AD_PS) to the Desktop (Written by Josh Madakor)
+- **Code** > **Download Zip**
+
+![](images/script_download.png)
+
+- Open the "names.txt" file and add your name to the top of the list and save
+- **Start** > right-click **Windows PowerShell ISE** > **More** > **Run as administrator** 
+- Click the **Open Script** > "1_CREATE_USERS.ps1"
+- Enable the Execution of all Scripts on Server
+- In the PowerShell command line type: `Set-ExecutionPolicy Unrestricted` and hit **Enter** > **Yes to All** 
+
+![](images/execpolicy.png)
+
+> NOTE: In essence this script will take the names from "names.txt" and save them into an array ($USER_FIRST_LAST_LIST = Get-Content .\names.txt)
+The script will loop for each user and separate the first name from the last name. 
+It will take the first name's first letter and join it to the last name to create a username and it will give them all the same password 
+($PASSWORD_FOR_USERS   = "Password1").
+Finally it will go through the process of adding each user to the domain (New-AdUser).
+
+### Execute the Script
+- Change directory in PowerShell's command line: `cd c:\Users\<username>\Desktop\AD-PS-master` and hit **Enter**
+- Click the green **Play** button > **Run once**
+
+![](images/running_script.png)
+
+- Go to **Server Manager** > **Active Directory Users and Computers** > right-click **mydomain.com** > **Refresh**
+- It should now show the **_USERS** Organizational Unit with all the users created from the script
+- To search for a specific user right-click **_USERS** > **Find** 
+
+![](images/users_ad.png)
+> NOTE: The users from the PowerShell Script now appear in AD.
+
+![](images/find_user.png)
+> NOTE: User Jim Halpert has been imported from the names.txt file and added to AD with the help of PowerShell
+
+## Step 11: Create and Configure Windows 10 Client VM
+#### Virtual Machine Name and Operating System
+- Add a new VM
+- **Name:** CLIENT1
+- **Type:** Microsoft Windows
+- **Version:** Windows 10 (64-bit)
+
+#### Hardware
+- **Base Memory:** 2048 MB (2GB)
+- **Processors:** 2-4 CPUs
+
+#### Virtual Hard Disk
+- **Disk Size:** 50.00GB
+
+#### Settings
+- **General** > **Advanced** > **Shared Clipboard** > **Bidirectional**
+- **General** > **Advanced** > **Drag'n'Drop** > **Bidirectional**
+- **Network** > **Adapter 1** > **Attatched to:** Internal Network
+
+## Step 12: Install and Configure Windows 10
+### Install Windows 10 ISO
+- Double click the **CLIENT1** VM
+- Select the DVD dropdown menu and find the Windows 10 ISO file
+- Click **Mount and Retry Boot**
+
+![](images/inst_win_pro.png)
+
+- **I don't have a product key**
+- **Windows 10 Pro**
+- **Custom: Insall Windows only (advanced)** and click **Next**
+- **I don't have internet**
+- **Set up for an organization**
+- **Domain join instead**
+- Add user account information
+  - **Name:** user
+  - **Password:** No password
+- Disable all tracking privacy settings
+- Skip customization services and Cortana
+
+## Step 13: Verify Internet Connectivity
+
+![](images/client1_connection.png)
+
+- **Start** > "cmd"
+- Type `ipconfig`
+- Ping a website like Google: `ping www.google.com`
+
+![](images/server_dhcp_lease.png)
+> NOTE: DHCP is working on Domain Controller. CLIENT1 has an IP address leased to it and the default gateway is set to the DC's IP address.
+
+## Step 14: Rename PC and Add to Domain
+- **Start** > **Settings** > **System** > **About** > **Rename this PC (advanced)**
+- Click **Change** and name "CLIENT1"
+- Click **Member of Domain:** and add "mydomain.com" > **Ok** 
+- Sign in with admin account to give CLIENT1 permissions to join domain
+- **Close** and **Restart now**
+
+![](images/rename_client1.png)
+
+## Step 14: Login With Generated User Credentials
+
+![](images/new_user_login.png)
+
+- Select **Other user** on CLIENT1
+- Use any of the usernames and password that were created with the PowerShell script to login
+- **Start** > "cmd"
+- Type `whoami`
+
+![](images/p_beesly.png)
